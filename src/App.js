@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import WorkspaceButton from "./Components/WorkspaceButton";
 import WorkspaceCusWin from "./Components/WorkspaceCusWin";
+import WrkSpDropDown from "./Components/WrkSpDropDown";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
 const fs = window.require("fs");
@@ -116,7 +117,7 @@ function App() {
             <p className="text-white font-raleway text-xl font-light tracking-tight px-2 pt-5">
               Please select the Workspace you would like to work with today!
             </p>
-            <p className="text-white font-raleway text-xl italic font-extralight tracking-tight px-2 pt-2">
+            <p className="text-white font-raleway text-xl italic font-extralight tracking-tight px-2 pt-8">
               Don't have one?
             </p>
             <p className="text-white font-raleway text-xl font-light tracking-tight px-2 pt-2">
