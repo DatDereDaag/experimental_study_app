@@ -26,12 +26,14 @@ function App() {
     }
   }, [buttonGroups]);
 
+  //Reload App on Workspace deletion
   useEffect(() => {
     if (shouldReload === true) {
       window.location.reload(true);
     }
   }, [shouldReload]);
 
+  //Delete Workspace after getting Index
   useEffect(() => {
     if (buttonIndex !== -1) {
       const groupIndex = Math.floor(buttonIndex / 3);
