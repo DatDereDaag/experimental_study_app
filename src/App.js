@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import WorkspaceButton from "./Components/WorkspaceButton";
 import WorkspaceCusWin from "./Components/WorkspaceCusWin";
-import WrkSpDropDown from "./Components/WrkSpDropDown";
 
 const ipcRenderer = window.require("electron").ipcRenderer;
 const fs = window.require("fs");
@@ -11,6 +10,8 @@ const fs = window.require("fs");
 function App() {
   const [buttonGroups, setButtonGroups] = useState([[]]);
   const [wrkSpCus, setwrkSpCus] = useState(false);
+  const [buttonIndex, setButtonIndex] = useState(-1);
+  const [shouldReload, setShouldReload] = useState(false);
 
   //variable for buttons loaded from json file
   let loadedButtonGroups = [[]];
@@ -20,8 +21,34 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (buttonGroups[0].length !== 0) saveButtons();
+    if (buttonGroups[0].length !== 0) {
+      saveButtons();
+    }
   }, [buttonGroups]);
+
+  useEffect(() => {
+    if (shouldReload === true) {
+      window.location.reload(true);
+    }
+  }, [shouldReload]);
+
+  useEffect(() => {
+    if (buttonIndex !== -1) {
+      const groupIndex = Math.floor(buttonIndex / 3);
+      const currentButtonGroups = [...buttonGroups];
+      const group = currentButtonGroups[groupIndex];
+
+      if (group) {
+        group.splice(buttonIndex, 1);
+        console.log("after splice " + currentButtonGroups);
+        if (groupIndex === 0 && group.length === 0) {
+          saveButtons();
+        }
+        setButtonGroups(currentButtonGroups);
+        setShouldReload(!shouldReload);
+      }
+    }
+  }, [buttonIndex]);
 
   const addNewButton = (name, color, isLoading) => {
     let updatedButtonGroups;
@@ -33,17 +60,34 @@ function App() {
     const currentGroupIndex = updatedButtonGroups.length - 1;
     const currentGroup = updatedButtonGroups[currentGroupIndex];
 
+    let buttonKey =
+      currentGroup.length + 1 + (updatedButtonGroups.length - 1) * 3;
+
     if (currentGroup.length < 3) {
       const newButton = (
-        <button key={currentGroup.length + 1}>
-          <WorkspaceButton wrkSpName={name} wrkSpColor={color} />
+        <button key={buttonKey}>
+          <WorkspaceButton
+            wrkSpName={name}
+            wrkSpColor={color}
+            buttonKey={buttonKey}
+            onDelete={(index) => {
+              setButtonIndex(index);
+            }}
+          />
         </button>
       );
       updatedButtonGroups[currentGroupIndex] = [...currentGroup, newButton];
     } else {
       const newButton = (
-        <button key={1}>
-          <WorkspaceButton wrkSpName={name} wrkSpColor={color} />
+        <button key={buttonKey}>
+          <WorkspaceButton
+            wrkSpName={name}
+            wrkSpColor={color}
+            buttonKey={buttonKey}
+            onDelete={(index) => {
+              setButtonIndex(index);
+            }}
+          />
         </button>
       );
       updatedButtonGroups.push([newButton]);

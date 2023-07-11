@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import WrkSpDropDown from "./WrkSpDropDown";
 
-const WorkspaceButton = ({ wrkSpName, wrkSpColor }) => {
+const WorkspaceButton = ({ wrkSpName, wrkSpColor, buttonKey, onDelete }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -24,7 +24,12 @@ const WorkspaceButton = ({ wrkSpName, wrkSpColor }) => {
         </div>
       </div>
       <div>
-        <WrkSpDropDown isShowing={isOpen} />
+        <WrkSpDropDown
+          isOpen={isOpen}
+          onDeleteSent={() => {
+            onDelete(buttonKey - 1);
+          }}
+        />
       </div>
     </div>
   );
