@@ -1,10 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
+let mainWindow;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 920,
+    backgroundColor: "#212622",
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -12,7 +15,7 @@ function createWindow() {
     },
   });
 
-  win.loadURL(`${app.getAppPath()}./build/index.html`);
+  mainWindow.loadURL(`${app.getAppPath()}./build/index.html`);
 }
 
 app.whenReady().then(() => {
@@ -29,4 +32,18 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+ipcMain.on("openWorkSpaceWindow", (event, args) => {
+  const win = new BrowserWindow({
+    height: 900,
+    width: 1800,
+    backgroundColor: "#212622",
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+  win.loadURL(`${app.getAppPath()}./build/index.html#/wrksp`);
+  mainWindow.close();
 });

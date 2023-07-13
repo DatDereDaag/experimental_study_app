@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import "./App.css";
 import WorkspaceButton from "./Components/WorkspaceButton";
@@ -12,6 +13,8 @@ function App() {
   const [wrkSpCus, setwrkSpCus] = useState(false);
   const [buttonIndex, setButtonIndex] = useState(-1);
   const [shouldReload, setShouldReload] = useState(false);
+
+  const navigate = useNavigate();
 
   //variable for buttons loaded from json file
   let loadedButtonGroups = [[]];
@@ -67,7 +70,12 @@ function App() {
 
     if (currentGroup.length < 3) {
       const newButton = (
-        <button key={buttonKey}>
+        <button
+          key={buttonKey}
+          onClick={() => {
+            ipcRenderer.send("openWorkSpaceWindow");
+          }}
+        >
           <WorkspaceButton
             wrkSpName={name}
             wrkSpColor={color}
@@ -81,7 +89,12 @@ function App() {
       updatedButtonGroups[currentGroupIndex] = [...currentGroup, newButton];
     } else {
       const newButton = (
-        <button key={buttonKey}>
+        <button
+          key={buttonKey}
+          onClick={() => {
+            ipcRenderer.send("openWorkSpaceWindow");
+          }}
+        >
           <WorkspaceButton
             wrkSpName={name}
             wrkSpColor={color}
