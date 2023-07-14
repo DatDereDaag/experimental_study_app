@@ -45,5 +45,6 @@ ipcMain.on("openWorkSpaceWindow", (event, args) => {
     },
   });
   win.loadURL(`${app.getAppPath()}./build/index.html#/wrksp`);
+  win.maximize();
   mainWindow.close();
 });

@@ -1,7 +1,7 @@
 [
   [
     {
-      "type": "button",
+      "type": "div",
       "key": "1",
       "ref": null,
       "props": {
@@ -9,8 +9,8 @@
           "key": null,
           "ref": null,
           "props": {
-            "wrkSpName": "Applied Maths",
-            "wrkSpColor": "a60808",
+            "wrkSpName": "Computer Science",
+            "wrkSpColor": "08a1a6",
             "buttonKey": 1
           },
           "_owner": null

@@ -5,7 +5,6 @@ import "./App.css";
 import WorkspaceButton from "./Components/WorkspaceButton";
 import WorkspaceCusWin from "./Components/WorkspaceCusWin";
 
-const ipcRenderer = window.require("electron").ipcRenderer;
 const fs = window.require("fs");
 
 function App() {
@@ -70,12 +69,7 @@ function App() {
 
     if (currentGroup.length < 3) {
       const newButton = (
-        <button
-          key={buttonKey}
-          onClick={() => {
-            ipcRenderer.send("openWorkSpaceWindow");
-          }}
-        >
+        <div key={buttonKey}>
           <WorkspaceButton
             wrkSpName={name}
             wrkSpColor={color}
@@ -84,17 +78,12 @@ function App() {
               setButtonIndex(index);
             }}
           />
-        </button>
+        </div>
       );
       updatedButtonGroups[currentGroupIndex] = [...currentGroup, newButton];
     } else {
       const newButton = (
-        <button
-          key={buttonKey}
-          onClick={() => {
-            ipcRenderer.send("openWorkSpaceWindow");
-          }}
-        >
+        <div key={buttonKey}>
           <WorkspaceButton
             wrkSpName={name}
             wrkSpColor={color}
@@ -103,7 +92,7 @@ function App() {
               setButtonIndex(index);
             }}
           />
-        </button>
+        </div>
       );
       updatedButtonGroups.push([newButton]);
     }
@@ -170,16 +159,16 @@ function App() {
             className="w-1/3 bg-gradient-to-tr from-darker-green from-30% to-dark-green shadow-xl rounded-r-2xl 
             justify-start text-center"
           >
-            <p className="text-green-text font-raleway text-3xl italic font-medium tracking-wider leading-10 px-5 py-10">
+            <p className="text-green-text font-raleway text-3xl italic font-medium tracking-tighter leading-10 px-5 py-10">
               WELCOME TO FLOWSPACE
             </p>
-            <p className="text-white font-raleway text-xl font-light tracking-tight px-2 pt-5">
+            <p className="text-white font-raleway text-xl font-light tracking-wider px-2 pt-5">
               Please select the Workspace you would like to work with today!
             </p>
-            <p className="text-white font-raleway text-xl italic font-extralight tracking-tight px-2 pt-8">
+            <p className="text-white font-raleway text-xl italic font-extralight tracking-wider px-2 pt-8">
               Don't have one?
             </p>
-            <p className="text-white font-raleway text-xl font-light tracking-tight px-2 pt-2">
+            <p className="text-white font-raleway text-xl font-light tracking-wider px-2 pt-2">
               Use the "+" button and start making a new one!
             </p>
           </div>
@@ -196,7 +185,7 @@ function App() {
         </div>
         {/*Create Button*/}
         <button
-          className="absolute text-2xl  text-center bg-slate-100 rounded-full bottom-7 right-7 h-14 w-14"
+          className="absolute text-2xl  text-center bg-slate-100 rounded-full bottom-7 right-7 h-14 w-14 hover:bg-[#64ed9f]"
           onClick={() => {
             setwrkSpCus(!wrkSpCus);
           }}
