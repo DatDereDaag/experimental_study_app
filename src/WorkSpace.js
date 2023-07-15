@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Document, Page } from "react-pdf";
 import {
   AiOutlineMenu,
@@ -22,15 +22,13 @@ const WorkSpace = () => {
 
   const [fileViews, setFileViews] = useState([]);
 
+  const containerRef = useRef();
+
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     console.log(numPages);
     setPageNumber(50);
   }
-
-  useEffect(() => {
-    console.log(fileViews);
-  }, [fileViews]);
 
   const addNewFileView = () => {
     const updatedFileViews = [...fileViews];
@@ -38,7 +36,7 @@ const WorkSpace = () => {
 
     const newFileView = (
       <div key={fileViewKey}>
-        <FileView />
+        <FileView containerRef={containerRef} />
       </div>
     );
 
@@ -75,7 +73,7 @@ const WorkSpace = () => {
             </div>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative" ref={containerRef}>
           {fileViews.map((fileView, index) => (
             <div key={index}>{fileView}</div>
           ))}
