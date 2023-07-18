@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 const FileView = ({ containerRef }) => {
   const fileViewRefHeader = useRef(null);
   const fileViewRef = useRef(null);
+  const fileViewCornerRef = useRef(null);
 
   useEffect(() => {
     let startX;
@@ -30,8 +31,15 @@ const FileView = ({ containerRef }) => {
 
     const onMouseMove = (e) => {
       if (isClicked) {
-        fileViewer.style.top = `${e.clientY - startY + LastY}px`;
-        fileViewer.style.left = `${e.clientX - startX + LastX}px`;
+        let newPosY = e.clientY - startY + LastY;
+        let newPosX = e.clientX - startX + LastX;
+        if (!(fileViewer.offsetHeight + newPosY >= 732) && !(newPosY < 0)) {
+          fileViewer.style.top = `${newPosY}px`;
+        }
+        fileViewer.style.left = `${newPosX}px`;
+        console.log("top " + fileViewer.style.top);
+        console.log("left " + fileViewer.style.left);
+        console.log(newPosY + fileViewer.offsetHeight);
       }
     };
 
