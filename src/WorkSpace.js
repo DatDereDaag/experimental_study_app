@@ -73,7 +73,7 @@ const WorkSpace = () => {
             </div>
           </div>
         </div>
-        <div className="relative" ref={containerRef}>
+        <div className=" h-auto relative" ref={containerRef}>
           {fileViews.map((fileView, index) => (
             <div key={index}>{fileView}</div>
           ))}

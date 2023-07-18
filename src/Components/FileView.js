@@ -20,19 +20,15 @@ const FileView = ({ containerRef }) => {
       isClicked = true;
       startX = e.clientX;
       startY = e.clientY;
-      console.log("down");
     };
 
     const onMouseUp = (e) => {
       isClicked = false;
       LastX = fileViewer.offsetLeft;
       LastY = fileViewer.offsetTop;
-      console.log("up");
     };
 
     const onMouseMove = (e) => {
-      console.log("moving");
-      console.log(isClicked);
       if (isClicked) {
         fileViewer.style.top = `${e.clientY - startY + LastY}px`;
         fileViewer.style.left = `${e.clientX - startX + LastX}px`;
@@ -56,15 +52,16 @@ const FileView = ({ containerRef }) => {
     return cleanup;
   }, []);
 
-  console.log("ref " + containerRef);
-
   return (
-    <div className="absolute flex flex-col" ref={fileViewRef}>
+    <div
+      className="absolute flex flex-col max-h-[732px] resize overflow-auto"
+      ref={fileViewRef}
+    >
       <div
-        className=" h-4 bg-green-500 hover:cursor-move"
+        className=" min-h-[16px] max-h-[16px] min-w-[200px] bg-green-500 hover:cursor-move"
         ref={fileViewRefHeader}
       ></div>
-      <div className=" bg-white w-[250px] h-[250px]">
+      <div className=" bg-white min-w-[200px] min-h-[200px] h-full">
         <div className=" flex flex-col"></div>
         FileView
       </div>
