@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 const FileView = ({ containerRef }) => {
   const fileViewRefHeader = useRef(null);
   const fileViewRef = useRef(null);
-  const fileViewCornerRef = useRef(null);
 
   useEffect(() => {
     let startX;
@@ -11,6 +10,8 @@ const FileView = ({ containerRef }) => {
     let LastX;
     let LastY;
     let isClicked;
+    let currentYPos = 0;
+    let currentXPos = 0;
 
     if (!fileViewRefHeader.current || !containerRef.current) return;
     const ref = fileViewRefHeader.current;
@@ -33,19 +34,65 @@ const FileView = ({ containerRef }) => {
       if (isClicked) {
         let newPosY = e.clientY - startY + LastY;
         let newPosX = e.clientX - startX + LastX;
-        if (!(fileViewer.offsetHeight + newPosY >= 732) && !(newPosY < 0)) {
+        currentYPos = newPosY;
+        currentXPos = newPosX;
+
+        //Handle Top Pos when moving within container
+        if (fileViewer.offsetHeight + newPosY > 733) {
+          fileViewer.style.top = `${
+            newPosY - (fileViewer.offsetHeight + newPosY - 733)
+          }px`;
+        } else if (newPosY < 0) {
+          fileViewer.style.top = `0px`;
+        } else {
           fileViewer.style.top = `${newPosY}px`;
         }
-        fileViewer.style.left = `${newPosX}px`;
+        //Handle Left Pos when moving within container
+        if (fileViewer.offsetWidth + newPosX > 1536) {
+          fileViewer.style.left = `${
+            newPosX - (fileViewer.offsetWidth + newPosX - 1536)
+          }px`;
+        } else if (newPosX < 0) {
+          fileViewer.style.left = `0px`;
+        } else {
+          fileViewer.style.left = `${newPosX}px`;
+        }
+
         console.log("top " + fileViewer.style.top);
         console.log("left " + fileViewer.style.left);
-        console.log(newPosY + fileViewer.offsetHeight);
+        console.log("offsetY" + fileViewer.offsetHeight);
+        console.log("offsetX" + fileViewer.offsetWidth);
+        console.log("new y " + (newPosY + fileViewer.offsetHeight));
+        console.log("new x " + (newPosX + fileViewer.offsetWidth));
+      }
+    };
+
+    const handleResize = (e) => {
+      fileViewer.style.resize = "both";
+      console.log("new x " + (currentXPos + fileViewer.offsetWidth));
+
+      //handle Y Coord Resize
+      if (fileViewer.offsetHeight + currentYPos >= 733) {
+        fileViewer.style.maxHeight = `${fileViewer.offsetHeight}px`;
+      } else {
+        fileViewer.style.maxHeight = `733px`;
+      }
+
+      //handle X Coord Resize
+      if (fileViewer.offsetWidth + currentXPos >= 1536) {
+        fileViewer.style.maxWidth = `${fileViewer.offsetWidth}px`;
+      } else {
+        fileViewer.style.maxWidth = `1536px`;
       }
     };
 
     ref.addEventListener("mousedown", onMouseDown);
     ref.addEventListener("mouseup", onMouseUp);
     ref.addEventListener("mouseleave", onMouseUp);
+    fileViewer.addEventListener("mousemove", handleResize);
+    fileViewer.addEventListener("mouseleave", () => {
+      fileViewer.style.resize = "none";
+    });
     container.addEventListener("mouseleave", onMouseUp);
     container.addEventListener("mousemove", onMouseMove);
 
@@ -53,6 +100,10 @@ const FileView = ({ containerRef }) => {
       ref.removeEventListener("mousedown", onMouseDown);
       ref.removeEventListener("mouseup", onMouseUp);
       ref.removeEventListener("mouseleave", onMouseUp);
+      fileViewer.removeEventListener("mousemove", handleResize);
+      fileViewer.removeEventListener("mouseleave", () => {
+        fileViewer.style.resize = "none";
+      });
       container.removeEventListener("mouseleave", onMouseUp);
       container.removeEventListener("mousemove", onMouseMove);
     };
@@ -62,7 +113,7 @@ const FileView = ({ containerRef }) => {
 
   return (
     <div
-      className="absolute flex flex-col max-h-[732px] resize overflow-auto"
+      className="absolute flex flex-col min-w-[200px] min-h-[216px] max-h-[733px] max-w-[1536px] resize-none overflow-auto"
       ref={fileViewRef}
     >
       <div
