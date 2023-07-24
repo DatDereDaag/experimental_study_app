@@ -1,8 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const FileView = ({ containerRef }) => {
+const FileView = ({ containerRef, onDimensionCheck }) => {
   const fileViewRefHeader = useRef(null);
   const fileViewRef = useRef(null);
+  const [spaceTracker, setSpaceTrakcer] = useState(0);
+
+  useEffect(() => {
+    console.log(spaceTracker);
+  }, [spaceTracker]);
 
   useEffect(() => {
     let startX;
@@ -13,7 +18,13 @@ const FileView = ({ containerRef }) => {
     let currentYPos = 0;
     let currentXPos = 0;
 
-    if (!fileViewRefHeader.current || !containerRef.current) return;
+    if (
+      !fileViewRefHeader.current ||
+      !containerRef.current ||
+      !fileViewRef.current
+    )
+      return;
+
     const ref = fileViewRefHeader.current;
     const fileViewer = fileViewRef.current;
     const container = containerRef.current;
@@ -28,6 +39,8 @@ const FileView = ({ containerRef }) => {
       isClicked = false;
       LastX = fileViewer.offsetLeft;
       LastY = fileViewer.offsetTop;
+
+      checkDimension();
     };
 
     const onMouseMove = (e) => {
@@ -57,38 +70,66 @@ const FileView = ({ containerRef }) => {
         } else {
           fileViewer.style.left = `${newPosX}px`;
         }
-
-        console.log("top " + fileViewer.style.top);
-        console.log("left " + fileViewer.style.left);
-        console.log("offsetY" + fileViewer.offsetHeight);
-        console.log("offsetX" + fileViewer.offsetWidth);
-        console.log("new y " + (newPosY + fileViewer.offsetHeight));
-        console.log("new x " + (newPosX + fileViewer.offsetWidth));
+        //console.log("top " + fileViewer.style.top);
+        //console.log("left " + fileViewer.style.left);
+        //console.log("offsetY" + fileViewer.offsetHeight);
+        //console.log("offsetX" + fileViewer.offsetWidth);
+        //console.log("new y " + (newPosY + fileViewer.offsetHeight));
+        //console.log("new x " + (newPosX + fileViewer.offsetWidth));
       }
     };
 
     const handleResize = (e) => {
       fileViewer.style.resize = "both";
-      console.log("new x " + (currentXPos + fileViewer.offsetWidth));
 
       //handle Y Coord Resize
-      if (fileViewer.offsetHeight + currentYPos >= 733) {
+      if (fileViewer.offsetHeight + currentYPos >= 730) {
         fileViewer.style.maxHeight = `${fileViewer.offsetHeight}px`;
       } else {
-        fileViewer.style.maxHeight = `733px`;
+        fileViewer.style.maxHeight = `730px`;
       }
 
       //handle X Coord Resize
-      if (fileViewer.offsetWidth + currentXPos >= 1536) {
+      if (fileViewer.offsetWidth + currentXPos >= 1532) {
         fileViewer.style.maxWidth = `${fileViewer.offsetWidth}px`;
       } else {
-        fileViewer.style.maxWidth = `1536px`;
+        fileViewer.style.maxWidth = `1532px`;
       }
     };
 
+    const checkDimension = () => {
+      const fileVierwerWidth = fileViewer.getBoundingClientRect().width;
+      const fileVierwerHeight = fileViewer.getBoundingClientRect().height;
+
+      let isOccupyingSpace = false;
+
+      console.log("height", fileVierwerHeight);
+
+      console.log("width", fileVierwerWidth);
+
+      if (fileVierwerWidth >= 750 && fileVierwerHeight >= 380) {
+        setSpaceTrakcer(1);
+        isOccupyingSpace = true;
+      }
+      if (fileVierwerWidth >= 750 && fileVierwerHeight >= 530) {
+        setSpaceTrakcer(2);
+        isOccupyingSpace = true;
+      }
+      if (fileVierwerWidth >= 1280 && fileVierwerHeight >= 380) {
+        setSpaceTrakcer(2);
+        isOccupyingSpace = true;
+      }
+      if (fileVierwerWidth >= 1300 && fileVierwerHeight >= 520) {
+        setSpaceTrakcer(4);
+        isOccupyingSpace = true;
+      }
+
+      isOccupyingSpace ? (isOccupyingSpace = false) : setSpaceTrakcer(0);
+    };
+
     ref.addEventListener("mousedown", onMouseDown);
-    ref.addEventListener("mouseup", onMouseUp);
     ref.addEventListener("mouseleave", onMouseUp);
+    fileViewer.addEventListener("mouseup", onMouseUp);
     fileViewer.addEventListener("mousemove", handleResize);
     fileViewer.addEventListener("mouseleave", () => {
       fileViewer.style.resize = "none";
@@ -98,8 +139,8 @@ const FileView = ({ containerRef }) => {
 
     const cleanup = () => {
       ref.removeEventListener("mousedown", onMouseDown);
-      ref.removeEventListener("mouseup", onMouseUp);
       ref.removeEventListener("mouseleave", onMouseUp);
+      fileViewer.removeEventListener("mouseup", onMouseUp);
       fileViewer.removeEventListener("mousemove", handleResize);
       fileViewer.removeEventListener("mouseleave", () => {
         fileViewer.style.resize = "none";
@@ -113,7 +154,7 @@ const FileView = ({ containerRef }) => {
 
   return (
     <div
-      className="absolute flex flex-col min-w-[200px] min-h-[216px] max-h-[733px] max-w-[1536px] resize-none overflow-auto"
+      className="absolute flex flex-col min-w-[200px] min-h-[216px] max-h-[730px] max-w-[1532px] resize-none overflow-auto"
       ref={fileViewRef}
     >
       <div
