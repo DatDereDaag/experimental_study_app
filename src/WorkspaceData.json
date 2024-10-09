@@ -1,22 +1,3 @@
 [
-  [
-    {
-      "type": "div",
-      "key": "1",
-      "ref": null,
-      "props": {
-        "children": {
-          "key": null,
-          "ref": null,
-          "props": {
-            "wrkSpName": "Computer Science",
-            "wrkSpColor": "08a1a6",
-            "buttonKey": 1
-          },
-          "_owner": null
-        }
-      },
-      "_owner": null
-    }
-  ]
+  []
 ]

@@ -21,53 +21,8 @@ const WorkSpace = () => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const [fileViews, setFileViews] = useState([]);
-  const [resizeTracker, setResizeTracker] = useState(0);
 
   const containerRef = useRef();
-
-  const upperLeftRef = useRef();
-  const upperRightRef = useRef();
-  const lowerLeftRef = useRef();
-  const lowerRightRef = useRef();
-
-  const fileViewerRefs = useRef([]);
-
-  //useEffect(() => {
-  //  const container = containerRef.current;
-  //
-  //  const upperLeft = upperLeftRef.current;
-  //  const upperRight = upperRightRef.current;
-  //
-  //  const lowerLeft = lowerLeftRef.current;
-  //  const lowerRight = lowerRightRef.current;
-  //
-  //  const rectsArray = [upperLeft, upperRight, lowerLeft, lowerRight];
-  //
-  //  const onMouseMove = () => {
-  //    fileViewerRefs.current.forEach((element, index) => {
-  //      const fileVIewRect = element.getBoundingClientRect();
-  //      for (let i = 0; i < 4; i++) {
-  //        const currentLocRect = rectsArray[i].getBoundingClientRect();
-  //        const overlap =
-  //          fileVIewRect.top >= currentLocRect.top &&
-  //          fileVIewRect.bottom <= currentLocRect.bottom &&
-  //          fileVIewRect.left >= currentLocRect.left &&
-  //          fileVIewRect.right <= currentLocRect.right;
-  //        if (overlap) {
-  //          console.log(`overlap at ${i}`);
-  //        }
-  //      }
-  //    });
-  //  };
-  //
-  //   container.addEventListener("mousemove", onMouseMove);
-  //
-  //   const cleanup = () => {
-  //     container.removeEventListener("mousemove", onMouseMove);
-  //   };
-  //
-  //   return cleanup;
-  // }, []);
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -75,20 +30,12 @@ const WorkSpace = () => {
     setPageNumber(50);
   }
 
-  const setFileViewerRefs = (index, ref) => {
-    fileViewerRefs.current[index] = ref;
-  };
-
   const addNewFileView = () => {
     const updatedFileViews = [...fileViews];
     let fileViewKey = updatedFileViews.length;
 
     const newFileView = (
-      <FileView
-        containerRef={containerRef}
-        refId={fileViewKey}
-        onDimensionCheck={(val) => setResizeTracker(val)}
-      />
+      <FileView containerRef={containerRef} refId={fileViewKey} />
     );
 
     updatedFileViews.push(newFileView);
@@ -127,24 +74,8 @@ const WorkSpace = () => {
         className="relative h-full grid grid-cols-2 grid-rows-2"
         ref={containerRef}
       >
-        <div className=" bg-slate-700 w-full h-full  " ref={upperLeftRef}>
-          hello
-        </div>
-        <div className=" bg-slate-700 w-full h-full  " ref={upperRightRef}>
-          hello
-        </div>
-        <div className=" bg-slate-700 w-full h-full  " ref={lowerLeftRef}>
-          hello
-        </div>
-        <div className=" bg-slate-700 w-full h-full " ref={lowerRightRef}>
-          hello
-        </div>
         {fileViews.map((fileView, index) => (
-          <div
-            className="absolute"
-            key={index}
-            ref={(ref) => setFileViewerRefs(index, ref)}
-          >
+          <div className="absolute" key={index}>
             {fileView}
           </div>
         ))}

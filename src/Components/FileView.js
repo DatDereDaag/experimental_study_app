@@ -1,13 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const FileView = ({ containerRef, onDimensionCheck }) => {
+const FileView = ({ containerRef }) => {
   const fileViewRefHeader = useRef(null);
   const fileViewRef = useRef(null);
-  const [spaceTracker, setSpaceTrakcer] = useState(0);
-
-  useEffect(() => {
-    console.log(spaceTracker);
-  }, [spaceTracker]);
 
   useEffect(() => {
     let startX;
@@ -98,38 +93,18 @@ const FileView = ({ containerRef, onDimensionCheck }) => {
     };
 
     const checkDimension = () => {
-      const fileVierwerWidth = fileViewer.getBoundingClientRect().width;
-      const fileVierwerHeight = fileViewer.getBoundingClientRect().height;
-
-      let isOccupyingSpace = false;
-
-      console.log("height", fileVierwerHeight);
-
-      console.log("width", fileVierwerWidth);
-
-      if (fileVierwerWidth >= 750 && fileVierwerHeight >= 380) {
-        setSpaceTrakcer(1);
-        isOccupyingSpace = true;
-      }
-      if (fileVierwerWidth >= 750 && fileVierwerHeight >= 530) {
-        setSpaceTrakcer(2);
-        isOccupyingSpace = true;
-      }
-      if (fileVierwerWidth >= 1280 && fileVierwerHeight >= 380) {
-        setSpaceTrakcer(2);
-        isOccupyingSpace = true;
-      }
-      if (fileVierwerWidth >= 1300 && fileVierwerHeight >= 520) {
-        setSpaceTrakcer(4);
-        isOccupyingSpace = true;
-      }
-
-      isOccupyingSpace ? (isOccupyingSpace = false) : setSpaceTrakcer(0);
+      const fileViewerRect = fileViewer.getBoundingClientRect();
+      const fileViewerWidth = fileViewerRect.width;
+      const fileViewerHeight = fileViewerRect.height;
+      const fileViewerTop = fileViewerRect.top;
+      const fileViewerBottom = fileViewerRect.bottom;
+      const fileViewerLeft = fileViewerRect.left;
+      const fileViewerRight = fileViewerRect.right;
     };
 
     ref.addEventListener("mousedown", onMouseDown);
     ref.addEventListener("mouseleave", onMouseUp);
-    fileViewer.addEventListener("mouseup", onMouseUp);
+    container.addEventListener("mouseup", onMouseUp);
     fileViewer.addEventListener("mousemove", handleResize);
     fileViewer.addEventListener("mouseleave", () => {
       fileViewer.style.resize = "none";
@@ -140,7 +115,7 @@ const FileView = ({ containerRef, onDimensionCheck }) => {
     const cleanup = () => {
       ref.removeEventListener("mousedown", onMouseDown);
       ref.removeEventListener("mouseleave", onMouseUp);
-      fileViewer.removeEventListener("mouseup", onMouseUp);
+      container.removeEventListener("mouseup", onMouseUp);
       fileViewer.removeEventListener("mousemove", handleResize);
       fileViewer.removeEventListener("mouseleave", () => {
         fileViewer.style.resize = "none";
